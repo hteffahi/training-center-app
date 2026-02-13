@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Center App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            width: auto;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .card-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                gap: 5px;
+            }
+            
+            .tab-btn {
+                min-width: 100px;
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Training Center App</h1>
+            <p>Gestion des candidats et paiements</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('candidates')">Candidats</button>
+            <button class="tab-btn" onclick="switchTab('payments')">Paiements</button>
+            <button class="tab-btn" onclick="switchTab('sessions')">Sessions</button>
+        </div>
+        
+        <div class="content">
+            <!-- Dashboard -->
+            <div id="dashboard" class="tab-content active">
+                <h2>Dashboard</h2>
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="stat">
+                        <div class="stat-number" id="totalCandidates">0</div>
+                        <div class="stat-label">Candidats</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="totalPayments">0 €</div>
+                        <div class="stat-label">Paiements reçus</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">Derniers candidats</h3>
+                <div id="recentCandidates" class="list">
+                    <div class="empty">Aucun candidat</div>
+                </div>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">Derniers paiements</h3>
+                <div id="recentPayments" class="list">
+                    <div class="empty">Aucun paiement</div>
+                </div>
+            </div>
+            
+            <!-- Candidats -->
+            <div id="candidates" class="tab-content">
+                <h2>Gestion des Candidats</h2>
+                <div id="candidateMessage"></div>
+                
+                <form onsubmit="addCandidate(event)" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Nom complet *</label>
+                        <input type="text" id="candidateName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="candidateEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" id="candidatePhone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Session *</label>
+                        <select id="candidateSession" required>
+                            <option value="">-- Sélectionne une session --</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Ajouter un candidat</button>
+                </form>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">Liste des candidats</h3>
+                <div id="candidatesList" class="list">
+                    <div class="empty">Aucun candidat</div>
+                </div>
+            </div>
+            
+            <!-- Paiements -->
+            <div id="payments" class="tab-content">
+                <h2>Gestion des Paiements</h2>
+                <div id="paymentMessage"></div>
+                
+                <form onsubmit="addPayment(event)" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Candidat *</label>
+                        <select id="paymentCandidate" required>
+                            <option value="">-- Sélectionne un candidat --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Montant (€) *</label>
+                        <input type="number" id="paymentAmount" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Méthode de paiement *</label>
+                        <select id="paymentMethod" required>
+                            <option value="">-- Sélectionne une méthode --</option>
+                            <option value="carte">Carte bancaire</option>
+                            <option value="virement">Virement</option>
+                            <option value="especes">Espèces</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Enregistrer le paiement</button>
+                </form>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">Historique des paiements</h3>
+                <div id="paymentsList" class="list">
+                    <div class="empty">Aucun paiement</div>
+                </div>
+            </div>
+            
+            <!-- Sessions -->
+            <div id="sessions" class="tab-content">
+                <h2>Gestion des Sessions</h2>
+                <div id="sessionMessage"></div>
+                
+                <form onsubmit="addSession(event)" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Nom de la session *</label>
+                        <input type="text" id="sessionName" placeholder="ex: Session 1 - Janvier 2024" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date de début *</label>
+                        <input type="date" id="sessionStart" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date de fin *</label>
+                        <input type="date" id="sessionEnd" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Créer une session</button>
+                </form>
+                
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">Sessions actives</h3>
+                <div id="sessionsList" class="list">
+                    <div class="empty">Aucune session</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data store (localStorage)
+        const db = {
+            candidates: JSON.parse(localStorage.getItem('candidates')) || [],
+            payments: JSON.parse(localStorage.getItem('payments')) || [],
+            sessions: JSON.parse(localStorage.getItem('sessions')) || []
+        };
+
+        function save() {
+            localStorage.setItem('candidates', JSON.stringify(db.candidates));
+            localStorage.setItem('payments', JSON.stringify(db.payments));
+            localStorage.setItem('sessions', JSON.stringify(db.sessions));
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'dashboard') updateDashboard();
+            if (tabName === 'candidates') updateCandidatesList();
+            if (tabName === 'payments') updatePaymentsList();
+            if (tabName === 'sessions') updateSessionsList();
+        }
+
+        function showMessage(elementId, message, isError = false) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
+            setTimeout(() => el.innerHTML = '', 5000);
+        }
+
+        // Sessions
+        function addSession(e) {
+            e.preventDefault();
+            const name = document.getElementById('sessionName').value;
+            const start = document.getElementById('sessionStart').value;
+            const end = document.getElementById('sessionEnd').value;
+
+            const session = {
+                id: Date.now(),
+                name,
+                start,
+                end,
+                createdAt: new Date().toLocaleDateString('fr-FR')
+            };
+
+            db.sessions.push(session);
+            save();
+            
+            showMessage('sessionMessage', '✅ Session créée!');
+            e.target.reset();
+            updateSessionsList();
+        }
+
+        function updateSessionsList() {
+            const list = document.getElementById('sessionsList');
+            
+            if (db.sessions.length === 0) {
+                list.innerHTML = '<div class="empty">Aucune session</div>';
+                updateCandidateSessionSelect();
+                return;
+            }
+
+            list.innerHTML = db.sessions.map(session => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${session.name}</div>
+                            <div class="card-subtitle">${session.start} → ${session.end}</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteSession(${session.id})">Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateCandidateSessionSelect();
+        }
+
+        function deleteSession(id) {
+            db.sessions = db.sessions.filter(s => s.id !== id);
+            save();
+            updateSessionsList();
+        }
+
+        function updateCandidateSessionSelect() {
+            const select = document.getElementById('candidateSession');
+            select.innerHTML = '<option value="">-- Sélectionne une session --</option>';
+            db.sessions.forEach(session => {
+                select.innerHTML += `<option value="${session.id}">${session.name}</option>`;
+            });
+        }
+
+        // Candidats
+        function addCandidate(e) {
+            e.preventDefault();
+            const name = document.getElementById('candidateName').value;
+            const email = document.getElementById('candidateEmail').value;
+            const phone = document.getElementById('candidatePhone').value;
+            const sessionId = document.getElementById('candidateSession').value;
+
+            const session = db.sessions.find(s => s.id == sessionId);
+            const sessionName = session ? session.name : 'Non définie';
+
+            const candidate = {
+                id: Date.now(),
+                name,
+                email,
+                phone,
+                sessionId,
+                sessionName,
+                status: 'inscrit',
+                createdAt: new Date().toLocaleDateString('fr-FR')
+            };
+
+            db.candidates.push(candidate);
+            save();
+            
+            showMessage('candidateMessage', '✅ Candidat ajouté!');
+            e.target.reset();
+            updateCandidatesList();
+            updatePaymentCandidateSelect();
+        }
+
+        function updateCandidatesList() {
+            const list = document.getElementById('candidatesList');
+            
+            if (db.candidates.length === 0) {
+                list.innerHTML = '<div class="empty">Aucun candidat</div>';
+                return;
+            }
+
+            list.innerHTML = db.candidates.map(candidate => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${candidate.name}</div>
+                            <div class="card-subtitle">${candidate.email}</div>
+                            <div class="card-subtitle" style="margin-top: 5px;">Session: ${candidate.sessionName}</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteCandidate(${candidate.id})">Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteCandidate(id) {
+            db.candidates = db.candidates.filter(c => c.id !== id);
+            save();
+            updateCandidatesList();
+            updatePaymentCandidateSelect();
+        }
+
+        function updatePaymentCandidateSelect() {
+            const select = document.getElementById('paymentCandidate');
+            select.innerHTML = '<option value="">-- Sélectionne un candidat --</option>';
+            db.candidates.forEach(candidate => {
+                select.innerHTML += `<option value="${candidate.id}">${candidate.name}</option>`;
+            });
+        }
+
+        // Paiements
+        function addPayment(e) {
+            e.preventDefault();
+            const candidateId = document.getElementById('paymentCandidate').value;
+            const amount = parseFloat(document.getElementById('paymentAmount').value);
+            const method = document.getElementById('paymentMethod').value;
+
+            const candidate = db.candidates.find(c => c.id == candidateId);
+            if (!candidate) {
+                showMessage('paymentMessage', '❌ Candidat introuvable', true);
+                return;
+            }
+
+            const payment = {
+                id: Date.now(),
+                candidateId,
+                candidateName: candidate.name,
+                amount,
+                method,
+                createdAt: new Date().toLocaleDateString('fr-FR'),
+                time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            };
+
+            db.payments.push(payment);
+            save();
+            
+            showMessage('paymentMessage', `✅ Paiement de ${amount}€ enregistré!`);
+            e.target.reset();
+            updatePaymentsList();
+            updateDashboard();
+        }
+
+        function updatePaymentsList() {
+            const list = document.getElementById('paymentsList');
+            
+            if (db.payments.length === 0) {
+                list.innerHTML = '<div class="empty">Aucun paiement</div>';
+                return;
+            }
+
+            list.innerHTML = db.payments.map(payment => `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${payment.candidateName} - ${payment.amount}€</div>
+                            <div class="card-subtitle">${payment.method} • ${payment.createdAt} ${payment.time}</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deletePayment(${payment.id})">Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deletePayment(id) {
+            db.payments = db.payments.filter(p => p.id !== id);
+            save();
+            updatePaymentsList();
+            updateDashboard();
+        }
+
+        // Dashboard
+        function updateDashboard() {
+            document.getElementById('totalCandidates').textContent = db.candidates.length;
+            
+            const totalPayments = db.payments.reduce((sum, p) => sum + p.amount, 0);
+            document.getElementById('totalPayments').textContent = totalPayments.toFixed(2) + ' €';
+
+            const recentCandidates = document.getElementById('recentCandidates');
+            if (db.candidates.length === 0) {
+                recentCandidates.innerHTML = '<div class="empty">Aucun candidat</div>';
+            } else {
+                recentCandidates.innerHTML = db.candidates.slice(-5).reverse().map(c => `
+                    <div class="card">
+                        <div class="card-title">${c.name}</div>
+                        <div class="card-subtitle">${c.email} • ${c.createdAt}</div>
+                    </div>
+                `).join('');
+            }
+
+            const recentPayments = document.getElementById('recentPayments');
+            if (db.payments.length === 0) {
+                recentPayments.innerHTML = '<div class="empty">Aucun paiement</div>';
+            } else {
+                recentPayments.innerHTML = db.payments.slice(-5).reverse().map(p => `
+                    <div class="card">
+                        <div class="card-title">${p.candidateName} - ${p.amount}€</div>
+                        <div class="card-subtitle">${p.method} • ${p.createdAt} ${p.time}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            updateSessionsList();
+            updateCandidatesList();
+            updatePaymentCandidateSelect();
+            updateDashboard();
+        });
+    </script>
+</body>
+</html>
