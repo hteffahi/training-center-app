@@ -381,11 +381,47 @@
     </div>
 
     <script>
+        // Sample data from Excel import
+        const initialSessions = [
+            { id: 1, name: 'Session 1 - Février 2026', start: '2026-02-01', end: '2026-02-28', createdAt: '13/02/2026' },
+            { id: 2, name: 'Session 2 - Mars 2026', start: '2026-03-01', end: '2026-03-31', createdAt: '13/02/2026' }
+        ];
+
+        const initialCandidates = [
+            { id: 1, name: 'Candidat 1', email: 'candidat1@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 2, name: 'Candidat 2', email: 'candidat2@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 3, name: 'Candidat 3', email: 'candidat3@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 4, name: 'Candidat 4', email: 'candidat4@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 5, name: 'Candidat 5', email: 'candidat5@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 6, name: 'Candidat 6', email: 'candidat6@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 7, name: 'Candidat 7', email: 'candidat7@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 8, name: 'Candidat 8', email: 'candidat8@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 9, name: 'Candidat 9', email: 'candidat9@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 10, name: 'Candidat 10', email: 'candidat10@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 11, name: 'Candidat 11', email: 'candidat11@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' },
+            { id: 12, name: 'Candidat 12', email: 'candidat12@example.com', phone: '', sessionId: 1, sessionName: 'Session 1 - Février 2026', status: 'inscrit', createdAt: '13/02/2026' }
+        ];
+
+        const initialPayments = [
+            { id: 101, candidateId: 1, candidateName: 'Candidat 1', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '10:00' },
+            { id: 102, candidateId: 2, candidateName: 'Candidat 2', amount: 350, method: 'virement', createdAt: '13/02/2026', time: '10:15' },
+            { id: 103, candidateId: 3, candidateName: 'Candidat 3', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '10:30' },
+            { id: 104, candidateId: 4, candidateName: 'Candidat 4', amount: 450, method: 'especes', createdAt: '13/02/2026', time: '10:45' },
+            { id: 105, candidateId: 5, candidateName: 'Candidat 5', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '11:00' },
+            { id: 106, candidateId: 6, candidateName: 'Candidat 6', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '11:15' },
+            { id: 107, candidateId: 7, candidateName: 'Candidat 7', amount: 400, method: 'virement', createdAt: '13/02/2026', time: '11:30' },
+            { id: 108, candidateId: 8, candidateName: 'Candidat 8', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '11:45' },
+            { id: 109, candidateId: 9, candidateName: 'Candidat 9', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '12:00' },
+            { id: 110, candidateId: 10, candidateName: 'Candidat 10', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '12:15' },
+            { id: 111, candidateId: 11, candidateName: 'Candidat 11', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '12:30' },
+            { id: 112, candidateId: 12, candidateName: 'Candidat 12', amount: 500, method: 'carte', createdAt: '13/02/2026', time: '12:45' }
+        ];
+
         // Data store (localStorage)
         const db = {
-            candidates: JSON.parse(localStorage.getItem('candidates')) || [],
-            payments: JSON.parse(localStorage.getItem('payments')) || [],
-            sessions: JSON.parse(localStorage.getItem('sessions')) || []
+            candidates: JSON.parse(localStorage.getItem('candidates')) || initialCandidates,
+            payments: JSON.parse(localStorage.getItem('payments')) || initialPayments,
+            sessions: JSON.parse(localStorage.getItem('sessions')) || initialSessions
         };
 
         function save() {
